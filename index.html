@@ -1,14 +1,13 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HW1 Write-up</title><style>body{margin:32px auto;padding:0 20px;max-width:960px;font:17px/1.45 "Times New Roman",serif;color:#000;background:#fff}h1{font-size:28px}h2{font-size:23px;margin-top:36px}h3{font-size:18px}p{margin:12px 0}section{margin-bottom:40px}header{margin-bottom:32px}nav a{margin-right:16px}.formula{font-family:monospace;font-size:14px;overflow-wrap:anywhere}.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}.gallery.three{grid-template-columns:repeat(3,minmax(0,1fr))}figure{margin:0;text-align:center}figure img{display:block;width:100%;height:auto}figcaption{font-size:14px;margin:6px 0 10px}figure.single{max-width:700px;margin:20px auto}.inspector{position:relative;width:52%;aspect-ratio:1;margin:8px auto;overflow:hidden}.inspector img{position:absolute;right:0;top:0;width:333.333%;max-width:none}.inspector-label{font-size:13px}footer{font-size:14px;margin:30px 0}@media(max-width:650px){body{margin:20px auto}.gallery,.gallery.three{grid-template-columns:1fr}}@media print{body{font-size:11pt}header{display:none}section{break-before:page}section:first-of-type{break-before:auto}figure{break-inside:avoid}}</style></head><body>
-<header><h1>Homework 1: Rasterizer</h1><p>CS184/284A, Fall 2026<br>Team nineteen</p><p><a href="https://cal-cs184-student.github.io/hw1-nineteen-writeup/">https://cal-cs184-student.github.io/hw1-nineteen-writeup/</a></p><nav><a href="hw1-writeup.pdf">PDF</a><a href="my_robot.svg">Robot SVG</a><a href="rgb_triangle.svg">RGB triangle SVG</a><a href="custom_texture.svg">Texture SVG</a></nav></header>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HW1 Write-up</title><style>body{margin:32px auto;padding:0 20px;max-width:960px;font:17px/1.45 "Times New Roman",serif;color:#000;background:#fff}h1{font-size:28px}h2{font-size:18px;margin-top:24px}h3{font-size:18px}p{margin:12px 0}section{margin-bottom:40px}header{margin-bottom:32px}nav a{margin-right:16px}.formula{font-family:monospace;font-size:14px;overflow-wrap:anywhere}.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}.gallery.three{grid-template-columns:repeat(3,minmax(0,1fr))}figure{margin:0;text-align:center}figure img{display:block;width:100%;height:auto}figcaption{font-size:14px;margin:6px 0 10px}figure.single{max-width:700px;margin:20px auto}.inspector{position:relative;width:52%;aspect-ratio:1;margin:8px auto;overflow:hidden}.inspector img{position:absolute;right:0;top:0;width:333.333%;max-width:none}.inspector-label{font-size:13px}footer{font-size:14px;margin:30px 0}@media(max-width:650px){body{margin:20px auto}.gallery,.gallery.three{grid-template-columns:1fr}}@media print{body{font-size:11pt}header{display:none}section{break-before:page}section:first-of-type{break-before:auto}figure{break-inside:avoid}}</style></head><body>
+<header><h1>HW1</h1><p>Team nineteen</p><p><a href="https://cal-cs184-student.github.io/hw1-nineteen-writeup/">https://cal-cs184-student.github.io/hw1-nineteen-writeup/</a></p><nav><a href="hw1-writeup.pdf">PDF</a><a href="my_robot.svg">Robot SVG</a><a href="rgb_triangle.svg">RGB triangle SVG</a><a href="custom_texture.svg">Texture SVG</a></nav></header>
 <section id="page-1">
-<h3>Overview</h3>
-<p>This renderer draws SVG triangles, applies transforms, blends colors, and maps textures. Supersampling helps with jagged triangle edges. Bilinear sampling and mipmaps help with texture detail. The screenshots show why these need different kinds of sampling.</p>
-<h3>Task 1: Drawing triangles</h3>
-<p>The code finds the smallest box around the triangle and clips it to the screen. It checks each pixel center at (x + 0.5, y + 0.5). Three edge tests tell which side of each edge the point is on. All nonnegative or all nonpositive results mean it is inside. This includes edges and supports both vertex orders. Zero-area triangles are skipped.</p>
-<p>Each sample takes three edge checks. Only the bounding box is visited, so the work is proportional to the samples in that box. The 1-sample image below is the Task 1 result.</p>
-<h3>Task 2: Supersampling</h3>
-<p>For s samples per pixel, the code uses a sqrt(s) by sqrt(s) grid. It tests the center of each small square and stores the covered colors in sample_buffer. The buffer has width * height * s entries, with each pixel&#x27;s samples stored together. It is resized when the window or sample rate changes and cleared to white each frame.</p>
-<p>Triangles write individual samples. Points and lines fill all samples of their pixel. After all shapes are drawn, resolve_to_framebuffer averages each pixel&#x27;s samples into one RGB color.</p>
+<p>The renderer turns SVG shapes into pixels and adds transforms, color blending, and textures. More samples helped with jagged edges, while bilinear filtering and mipmaps helped with blocky or noisy textures.</p>
+<h2>Task 1</h2>
+<p>The loop starts with a box around the triangle, clipped to the screen, so it doesn&#x27;t have to check every pixel on the screen. Inside that box, it checks pixel centers at (x + 0.5, y + 0.5). Three edge tests tell whether the point is inside. If the results are all nonnegative or all nonpositive, the point gets drawn. Accepting either sign makes both vertex orders work, and accepting zero includes points on the edges. Triangles with zero area are skipped.</p>
+<p>There are only three edge checks per sample, so the work grows with the number of samples in the bounding box. The picture labeled 1 sample below is also the result for this part.</p>
+<h2>Task 2</h2>
+<p>With supersampling, each pixel gets several sample points instead of one. For s samples, they form a sqrt(s) by sqrt(s) grid, with a point at the center of each small square. The colors go into sample_buffer, which has width * height * s entries. Each pixel&#x27;s samples sit together in the buffer. Changing the window size or sample rate resizes it, and each new frame starts with white samples.</p>
+<p>A triangle only fills the samples it covers. Points and lines fill all samples of their pixel. Once everything is drawn, resolve_to_framebuffer averages the samples to get one RGB color per pixel.</p>
 <div class="gallery three">
 <figure><a href="images/task2-spp1.png"><img src="images/task2-spp1.png" alt="1 sample"></a><figcaption>1 sample</figcaption>
 <div class="inspector"><img src="images/task2-spp1.png" alt="Pixel inspector: 1 sample"></div><div class="inspector-label">Pixel inspector</div>
@@ -20,27 +19,27 @@
 <div class="inspector"><img src="images/task2-spp16.png" alt="Pixel inspector: 16 samples"></div><div class="inspector-label">Pixel inspector</div>
 </figure>
 </div>
-<p>All three show basic/test4.svg at the default view with the same inspector position. At 1 sample, the red tip has sharp steps. At 4 and 16 samples, partly covered pixels become lighter red. More samples give smoother edges because they estimate coverage more closely.</p>
+<p>These are basic/test4.svg at the default view, with the inspector in the same spot. The red tip looks rough at 1 sample. At 4 and 16 samples, the edge has lighter red pixels and looks smoother. Those pixels are only partly covered, so averaging mixes the red with the white background.</p>
 </section>
 <section id="page-2">
-<h2>Task 3: Transforms</h2>
-<p>Translation moves a shape, scaling changes its size, and rotation turns it. These use 3 by 3 matrices. Rotation converts degrees to radians before using sine and cosine.</p>
-<p>The robot is waving and stepping. The body tilts, one arm bends upward, and one knee bends. Nested groups put each joint in its own local coordinates. The forearm is inside the upper-arm group, so it follows the shoulder rotation. The file is my_robot.svg.</p>
+<h2>Task 3</h2>
+<p>Translation moves the shape, scaling changes its size, and rotation turns it. The code uses 3 by 3 matrices for these. For rotation, the angle is converted from degrees to radians before using sine and cosine.</p>
+<p>The idea for the robot was to have it wave while taking a step. Its body leans a little, with one arm up and one knee bent. The arm and leg parts are in nested groups, so moving a joint also moves the parts attached to it. For example, the forearm follows the shoulder because it is inside the upper-arm group. The file is my_robot.svg.</p>
 <figure class="single"><a href="images/task3-robot.png"><img src="images/task3-robot.png" alt="my_robot.svg, 16 samples per pixel."></a><figcaption>my_robot.svg, 16 samples per pixel.</figcaption></figure>
-<h3>Task 4: Barycentric coordinates</h3>
-<p>Barycentric coordinates are three vertex weights that add up to 1. Each weight is the area of the opposite small triangle divided by the full triangle area. The sample color is a*colorA + b*colorB + c*colorC. At a vertex, only its color contributes. At the center, all three contribute equally.</p>
+<h2>Task 4</h2>
+<p>Barycentric coordinates give a point three weights, one for each vertex. They add up to 1. Each weight comes from the area of the opposite small triangle divided by the full triangle area. The color is then a*colorA + b*colorB + c*colorC. At a vertex, only that vertex&#x27;s color is used. Equal weights give an equal mix of the three colors.</p>
 <div class="gallery">
 <figure><a href="images/task4-rgb.png"><img src="images/task4-rgb.png" alt="RGB triangle, 1 sample"></a><figcaption>RGB triangle, 1 sample</figcaption>
 </figure>
 <figure><a href="images/task4-wheel.png"><img src="images/task4-wheel.png" alt="basic/test7.svg, default view, 1 sample"></a><figcaption>basic/test7.svg, default view, 1 sample</figcaption>
 </figure>
 </div>
-<p>In the left triangle, the top is red, the bottom-left is green, and the bottom-right is blue. Points near the top have a larger red weight. Along the bottom edge, only green and blue are mixed.</p>
+<p>In the left picture, moving toward the top makes the color more red because the red weight gets larger. The bottom edge only mixes green and blue. The color wheel on the right uses the same blending across its triangles.</p>
 </section>
 <section id="page-3">
-<h2>Task 5: Pixel sampling</h2>
-<p>Pixel sampling chooses a texture color. The code uses barycentric weights to find UV, then maps UV to (u*(width-1), v*(height-1)). Indices are clamped at the image edge.</p>
-<p>Nearest sampling rounds to one texel. Bilinear sampling blends the four nearby texels using the position between them. It first blends each row, then blends the two row results.</p>
+<h2>Task 5</h2>
+<p>For textures, the barycentric weights give the UV position of each sample. That position maps to (u*(width-1), v*(height-1)) in the texture. Indices at the edges are clamped so they don&#x27;t go outside the image.</p>
+<p>Nearest sampling just rounds to one texel and uses its color. Bilinear takes the four nearby texels and blends them based on how close the sample is to each one. It blends across each row first, then between the two rows.</p>
 <div class="gallery">
 <figure><a href="images/task5-nearest-1.png"><img src="images/task5-nearest-1.png" alt="Nearest, 1 sample"></a><figcaption>Nearest, 1 sample</figcaption>
 </figure>
@@ -51,14 +50,14 @@
 <figure><a href="images/task5-bilinear-16.png"><img src="images/task5-bilinear-16.png" alt="Bilinear, 16 samples"></a><figcaption>Bilinear, 16 samples</figcaption>
 </figure>
 </div>
-<p>These use texmap/test1.svg with L_ZERO, the same zoom, and the same inspector position. Nearest at 1 sample looks blocky near the coast. At 16 samples, the edges of those blocks are smoother. Bilinear is already smooth at 1 sample, so 16 samples make a smaller difference.</p>
-<p>The difference is large when zoomed in on sharp texture changes. One texel covers many screen pixels, so nearest repeats blocks of color while bilinear blends between them. When zoomed far out, bilinear alone can still alias.</p>
+<p>These show texmap/test1.svg with L_ZERO and the same zoom and inspector spot. Nearest at 1 sample looks blocky around the coast. Going to 16 samples softens those blocks. Bilinear already looks smoother at 1 sample, so going to 16 changes it less.</p>
+<p>Zooming in makes the difference easier to see. One texel covers several screen pixels, so nearest repeats the same color over a block while bilinear blends into the next color. This matters most around sharp color changes. When zoomed far out, bilinear can still leave aliasing.</p>
 </section>
 <section id="page-4">
-<h2>Task 6: Level sampling</h2>
-<p>Mipmaps are smaller, averaged copies of a texture. The code finds UV at (x,y), (x+1,y), and (x,y+1). It subtracts the first UV, then scales the u changes by the original width and the v changes by the height. The longer change gives the texture size covered by one screen pixel. Its log2 gives the mip level, clamped to the available levels.</p>
-<p>L_ZERO uses level 0. L_NEAREST rounds to the closest level. L_LINEAR blends the two surrounding levels. Pixel sampling is chosen separately. Bilinear pixels with linear levels is trilinear filtering.</p>
-<p>More screen samples smooth edges but increase shading work and sample memory. Bilinear reads four texels instead of one, needs no extra image storage, and helps enlarged textures. Mipmaps help small textures but use about one third more memory for a square power-of-two image. Linear level sampling reads two levels and gives smoother level changes.</p>
+<h2>Task 6</h2>
+<p>Mipmaps give the texture smaller, averaged versions to sample from. To pick a level, the code finds UV at (x,y), (x+1,y), and (x,y+1), then subtracts the first UV from the other two. The u changes are multiplied by the original texture width and the v changes by its height. The longer change estimates how many texels fit in one screen pixel. Taking log2 gives the level, which is clamped to the levels that exist.</p>
+<p>L_ZERO stays at level 0. L_NEAREST rounds to the closest level. L_LINEAR blends the two levels around the result. Nearest or bilinear pixel sampling works with any of these. Bilinear pixels with linear levels is trilinear filtering.</p>
+<p>More screen samples help with edges, but take more time and buffer memory. Bilinear reads four texels instead of one, without needing another image, and helps when zoomed in. Mipmaps help when zoomed out, but a square power-of-two texture needs about one third more memory for its mip chain. Blending two levels takes more work than picking one, but avoids sudden level changes.</p>
 <div class="gallery">
 <figure><a href="images/task6-zero-nearest.png"><img src="images/task6-zero-nearest.png" alt="L_ZERO + P_NEAREST"></a><figcaption>L_ZERO + P_NEAREST</figcaption>
 </figure>
@@ -69,9 +68,9 @@
 <figure><a href="images/task6-nearest-bilinear.png"><img src="images/task6-nearest-bilinear.png" alt="L_NEAREST + P_LINEAR"></a><figcaption>L_NEAREST + P_LINEAR</figcaption>
 </figure>
 </div>
-<p>These use Zone plate boys at 1 sample with the same view. Level 0 shows false patterns. Bilinear reduces them a little. The nearest mip level removes more fine detail, and adding bilinear looks smoothest. The chosen mip level is 1 because the footprint is 1.8 texels per screen pixel.</p>
-<p>A bug left the last mip levels black. Fixing the loop to fill every level solved it.</p>
-<p>Known reference differences: a few thin edges and color-wheel pixels differ. The starter does not handle the partial stroke opacity in the lion and sphere.</p>
-<p>Texture: AlbertCahalan, Zone plate boys, CC BY-SA 3.0. The original PNG and filtered screenshots use this license. Codex helped with code, tests, and writing.</p>
+<p>These use Zone plate boys at 1 sample and the same view. Level 0 has false patterns, and bilinear only reduces them a little. Using the nearest mip level removes more fine detail. Adding bilinear looks smoothest here. The texture covers about 1.8 texels per screen pixel, so the nearest mip level is 1.</p>
+<p>The last mip levels initially came out black because the loop skipped them. Making the loop fill every level fixed this.</p>
+<p>Some reference pixels still differ on thin edges and the color wheel. The starter also does not handle the partly transparent strokes in the lion and sphere.</p>
+<p>Image: AlbertCahalan, Zone plate boys, CC BY-SA 3.0. The original PNG and filtered screenshots use this license. Codex helped with code, tests, and writing.</p>
 </section>
 <footer><a href="https://commons.wikimedia.org/wiki/File:Zone_plate_boys.png">Texture source</a> | <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> | <a href="ASSET_CREDITS.md">Image credits</a> | <a href="capture-manifest.json">Screenshot settings</a> | <a href="images/zone_plate_boys.png">Original PNG</a></footer></body></html>
