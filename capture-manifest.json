@@ -1,0 +1,119 @@
+[
+  {
+    "file": "task3-robot.png",
+    "native": "screenshot_9-25_22-8-12.png",
+    "scene": "my_robot.svg",
+    "spp": 16,
+    "psm": "P_NEAREST",
+    "lsm": "L_ZERO",
+    "inspector": false
+  },
+  {
+    "file": "task2-spp1.png",
+    "spp": 1,
+    "scene": "basic/test4.svg",
+    "inspector": true,
+    "native": "screenshot_9-25_22-8-51.png"
+  },
+  {
+    "file": "task2-spp4.png",
+    "spp": 4,
+    "scene": "basic/test4.svg",
+    "inspector": true,
+    "native": "screenshot_9-25_22-8-52.png"
+  },
+  {
+    "file": "task2-spp16.png",
+    "spp": 16,
+    "scene": "basic/test4.svg",
+    "inspector": true,
+    "native": "screenshot_9-25_22-8-53.png"
+  },
+  {
+    "file": "task4-wheel.png",
+    "spp": 1,
+    "scene": "basic/test7.svg",
+    "inspector": false,
+    "native": "screenshot_9-25_22-9-24.png"
+  },
+  {
+    "file": "task4-rgb.png",
+    "spp": 1,
+    "scene": "basic/rgb_triangle.svg",
+    "inspector": false,
+    "native": "screenshot_9-25_22-9-25.png"
+  },
+  {
+    "file": "task5-nearest-1.png",
+    "spp": 1,
+    "scene": "texmap/test1.svg",
+    "psm": "P_NEAREST",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "view": "4x default zoom; Gulf of Guinea coast",
+    "native": "screenshot_9-25_22-10-46.png"
+  },
+  {
+    "file": "task5-nearest-16.png",
+    "spp": 16,
+    "scene": "texmap/test1.svg",
+    "psm": "P_NEAREST",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_22-10-49.png"
+  },
+  {
+    "file": "task5-bilinear-16.png",
+    "spp": 16,
+    "scene": "texmap/test1.svg",
+    "psm": "P_LINEAR",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_22-10-51.png"
+  },
+  {
+    "file": "task5-bilinear-1.png",
+    "spp": 1,
+    "scene": "texmap/test1.svg",
+    "psm": "P_LINEAR",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_22-10-52.png"
+  },
+  {
+    "file": "task6-zero-nearest.png",
+    "spp": 1,
+    "scene": "texmap/custom_texture.svg",
+    "psm": "P_NEAREST",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_22-12-30.png"
+  },
+  {
+    "file": "task6-zero-bilinear.png",
+    "spp": 1,
+    "scene": "texmap/custom_texture.svg",
+    "psm": "P_LINEAR",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_22-12-43.png"
+  },
+  {
+    "file": "task6-nearest-bilinear.png",
+    "spp": 1,
+    "scene": "texmap/custom_texture.svg",
+    "psm": "P_LINEAR",
+    "lsm": "L_NEAREST",
+    "inspector": true,
+    "native": "screenshot_9-25_22-12-58.png"
+  },
+  {
+    "file": "task6-nearest-nearest.png",
+    "spp": 1,
+    "scene": "texmap/custom_texture.svg",
+    "psm": "P_NEAREST",
+    "lsm": "L_NEAREST",
+    "inspector": true,
+    "native": "screenshot_9-25_22-13-13.png"
+  }
+]
