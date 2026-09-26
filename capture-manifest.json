@@ -115,5 +115,104 @@
     "lsm": "L_NEAREST",
     "inspector": true,
     "native": "screenshot_9-25_22-13-13.png"
+  },
+  {
+    "file": "extra-rotation.png",
+    "scene": "transforms/my_robot.svg",
+    "spp": 16,
+    "rotation_degrees": 30,
+    "inspector": false,
+    "native": "screenshot_9-25_23-29-2.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "extra-grid.png",
+    "scene": "extra/jitter.svg",
+    "spp": 16,
+    "pattern": "grid",
+    "inspector": false,
+    "native": "screenshot_9-25_23-29-15.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "extra-jitter.png",
+    "scene": "extra/jitter.svg",
+    "spp": 16,
+    "pattern": "jittered",
+    "inspector": false,
+    "native": "screenshot_9-25_23-29-28.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "extra-nearest.png",
+    "scene": "extra/anisotropic.svg",
+    "spp": 1,
+    "psm": "P_NEAREST",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_23-35-13.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "extra-bilinear.png",
+    "scene": "extra/anisotropic.svg",
+    "spp": 1,
+    "psm": "P_LINEAR",
+    "lsm": "L_ZERO",
+    "inspector": true,
+    "native": "screenshot_9-25_23-35-29.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "extra-trilinear.png",
+    "scene": "extra/anisotropic.svg",
+    "spp": 1,
+    "psm": "P_LINEAR",
+    "lsm": "L_LINEAR",
+    "inspector": true,
+    "native": "screenshot_9-25_23-35-42.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "extra-anisotropic.png",
+    "scene": "extra/anisotropic.svg",
+    "spp": 1,
+    "psm": "P_LINEAR",
+    "lsm": "L_ANISOTROPIC",
+    "inspector": true,
+    "native": "screenshot_9-25_23-35-56.png",
+    "resolution": [
+      800,
+      800
+    ]
+  },
+  {
+    "file": "competition.png",
+    "scene": "extra/competition.svg",
+    "spp": 16,
+    "inspector": false,
+    "native": "screenshot_9-25_23-36-59.png",
+    "resolution": [
+      800,
+      800
+    ]
   }
 ]

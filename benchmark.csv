@@ -1,0 +1,13 @@
+scene,method,spp,median_cpu_ms
+svg/basic/test4.svg,bounding box,1,0.5394
+svg/basic/test4.svg,row clipping,1,0.2677
+svg/basic/test4.svg,bounding box,16,6.0001
+svg/basic/test4.svg,row clipping,16,2.9752
+svg/extra/skinny.svg,bounding box,1,9.5168
+svg/extra/skinny.svg,row clipping,1,0.1554
+svg/extra/skinny.svg,bounding box,16,99.2169
+svg/extra/skinny.svg,row clipping,16,1.0602
+svg/extra/anisotropic.svg,nearest,1,1.0744
+svg/extra/anisotropic.svg,bilinear,1,2.3889
+svg/extra/anisotropic.svg,trilinear,1,4.9553
+svg/extra/anisotropic.svg,anisotropic,1,28.9383

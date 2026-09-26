@@ -1,5 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HW1 Write-up</title><style>body{margin:32px auto;padding:0 20px;max-width:960px;font:17px/1.45 "Times New Roman",serif;color:#000;background:#fff}h1{font-size:28px;color:#28578e}h2{font-size:18px;margin-top:24px;color:#28578e}h3{font-size:18px}p{margin:12px 0}section{margin-bottom:40px}header{margin-bottom:32px}nav a{margin-right:16px}.formula{font-family:monospace;font-size:14px;overflow-wrap:anywhere}.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}.gallery.three{grid-template-columns:repeat(3,minmax(0,1fr))}figure{margin:0;text-align:center}figure img{display:block;width:100%;height:auto}figcaption{font-size:14px;margin:6px 0 10px;color:#356b6b}figure.single{max-width:700px;margin:20px auto}.inspector{position:relative;width:52%;aspect-ratio:1;margin:8px auto;overflow:hidden}.inspector img{position:absolute;right:0;top:0;width:333.333%;max-width:none}.inspector-label{font-size:13px}footer{font-size:14px;margin:30px 0}@media(max-width:650px){body{margin:20px auto}.gallery,.gallery.three{grid-template-columns:1fr}}@media print{body{font-size:11pt}header{display:none}section{break-before:page}section:first-of-type{break-before:auto}figure{break-inside:avoid}}</style></head><body>
-<header><h1>HW1</h1><p>Team nineteen</p><p><a href="https://cal-cs184-student.github.io/hw1-nineteen-writeup/">https://cal-cs184-student.github.io/hw1-nineteen-writeup/</a></p><nav><a href="hw1-writeup.pdf">PDF</a><a href="my_robot.svg">Robot SVG</a><a href="rgb_triangle.svg">RGB triangle SVG</a><a href="custom_texture.svg">Texture SVG</a></nav></header>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HW1 Write-up</title><style>body{margin:32px auto;padding:0 20px;max-width:960px;font:17px/1.45 "Times New Roman",serif;color:#000;background:#fff}h1{font-size:28px;color:#28578e}h2{font-size:18px;margin-top:24px;color:#28578e}h3{font-size:18px}p{margin:12px 0}section{margin-bottom:40px}header{margin-bottom:32px}nav a{margin-right:16px}table{border-collapse:collapse;margin:16px 0;width:100%}td,th{padding:5px 10px;border-bottom:1px solid #ccc;text-align:left}.side{display:flex;gap:20px;align-items:center}.side figure{width:180px;flex-shrink:0}.formula{font-family:monospace;font-size:14px;overflow-wrap:anywhere}.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}.gallery.three{grid-template-columns:repeat(3,minmax(0,1fr))}figure{margin:0;text-align:center}figure img{display:block;width:100%;height:auto}figcaption{font-size:14px;margin:6px 0 10px;color:#356b6b}figure.single{max-width:700px;margin:20px auto}.inspector{position:relative;width:52%;aspect-ratio:1;margin:8px auto;overflow:hidden}.inspector img{position:absolute;right:0;top:0;width:333.333%;max-width:none}.inspector-label{font-size:13px}footer{font-size:14px;margin:30px 0}@media(max-width:650px){body{margin:20px auto}.gallery,.gallery.three{grid-template-columns:1fr}}@media print{body{font-size:11pt}header{display:none}section{break-before:page}section:first-of-type{break-before:auto}figure{break-inside:avoid}}</style></head><body>
+<header><h1>HW1</h1><p>Team nineteen</p><p><a href="https://cal-cs184-student.github.io/hw1-nineteen-writeup/">https://cal-cs184-student.github.io/hw1-nineteen-writeup/</a></p><nav><a href="hw1-writeup.pdf">PDF</a><a href="my_robot.svg">Robot SVG</a><a href="rgb_triangle.svg">RGB triangle SVG</a><a href="custom_texture.svg">Texture SVG</a><a href="competition.svg">Competition SVG</a><a href="src/generate_competition.py">Art script</a><a href="benchmark.csv">Timings</a></nav></header>
 <section id="page-1">
 <p>The renderer turns SVG shapes into pixels and adds transforms, color blending, and textures. More samples helped with jagged edges, while bilinear filtering and mipmaps helped with blocky or noisy textures.</p>
 <h2>Task 1</h2>
@@ -73,4 +73,45 @@
 <p>Some reference pixels still differ on thin edges and the color wheel. The starter also does not handle the partly transparent strokes in the lion and sphere.</p>
 <p>Image: AlbertCahalan, Zone plate boys, CC BY-SA 3.0. The original PNG and filtered screenshots use this license. Codex helped with code, tests, and writing.</p>
 </section>
-<footer><a href="https://commons.wikimedia.org/wiki/File:Zone_plate_boys.png">Texture source</a> | <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> | <a href="ASSET_CREDITS.md">Image credits</a> | <a href="capture-manifest.json">Screenshot settings</a> | <a href="images/zone_plate_boys.png">Original PNG</a></footer></body></html>
+<section id="page-5">
+<h2>Task 1</h2>
+<p>Extra credit: the faster version finds the part of each pixel row that the triangle can touch. It only checks samples in that smaller range. A one-pixel margin keeps edge samples safe, and very large coordinates use the original box. The edge test and colors stay the same. B switches between the two versions.</p>
+<table><tr><td>Scene</td><td>Samples</td><td>Box (ms)</td><td>Rows (ms)</td></tr><tr><td>test4.svg</td><td>1</td><td>0.539</td><td>0.268</td></tr><tr><td>test4.svg</td><td>16</td><td>6.000</td><td>2.975</td></tr><tr><td>skinny.svg</td><td>1</td><td>9.517</td><td>0.155</td></tr><tr><td>skinny.svg</td><td>16</td><td>99.217</td><td>1.060</td></tr></table>
+<p>These are CPU times around svg.draw(), measured with clock() on this Mac at 800 by 800, compiled with -O3. Each number is the median of seven batches of twelve draws after a warm-up. Loading, mip generation, clearing, and resolving are outside the timer. Test4 is about twice as fast. The thin triangles improve much more because most of their boxes are empty.</p>
+<h2>Task 2</h2>
+<p>Extra credit: J switches to jittered samples. Each small grid square gets one randomly placed point. The pixel and sample numbers give it a fixed seed, so it stays still across redraws. All triangles use the same positions, which avoids gaps between them. One sample per pixel still uses the center.</p>
+<div class="gallery">
+<figure><a href="images/extra-grid.png"><img src="images/extra-grid.png" alt="Grid, 16 samples"></a><figcaption>Grid, 16 samples</figcaption>
+</figure>
+<figure><a href="images/extra-jitter.png"><img src="images/extra-jitter.png" alt="Jittered, 16 samples"></a><figcaption>Jittered, 16 samples</figcaption>
+</figure>
+</div>
+<p>The scene has very thin vertical bars with three slightly different spacings. The grid makes false vertical bands. Jittering breaks those bands into fine grain. It still has noise, but it does not lock onto the repeating bars.</p>
+<h2>Task 3</h2>
+<div class="side"><figure><img src="images/extra-rotation.png" alt="View rotated 30 degrees."><figcaption>View rotated 30 degrees.</figcaption></figure><p>Extra credit: [ and ] turn the view by 15 degrees. The SVG first moves into NDC. Then the center moves to the origin, the view rotates, and the center moves back before the screen transform. The canvas border uses the same matrix. Space resets the angle. Dragging is rotated back into SVG space, so it follows the mouse.</p></div>
+</section>
+<section id="page-6">
+<h2>Task 6</h2>
+<p>Extra credit: pressing L once after trilinear selects anisotropic filtering. The UV changes give the long and short directions of a pixel in the texture. The short direction chooses the mip level. Several samples are spread along the long direction and averaged. The code uses at most 16 taps, widening the short filter if more would be needed. It reuses the mipmaps and supports both pixel filters.</p>
+<div class="gallery">
+<figure><a href="images/extra-nearest.png"><img src="images/extra-nearest.png" alt="Nearest, level 0"></a><figcaption>Nearest, level 0</figcaption>
+</figure>
+<figure><a href="images/extra-bilinear.png"><img src="images/extra-bilinear.png" alt="Bilinear, level 0"></a><figcaption>Bilinear, level 0</figcaption>
+</figure>
+<figure><a href="images/extra-trilinear.png"><img src="images/extra-trilinear.png" alt="Trilinear"></a><figcaption>Trilinear</figcaption>
+</figure>
+<figure><a href="images/extra-anisotropic.png"><img src="images/extra-anisotropic.png" alt="Anisotropic"></a><figcaption>Anisotropic</figcaption>
+</figure>
+</div>
+<p>All four use one screen sample and the same view. This generated weave is squeezed much more in one direction. Nearest and bilinear leave checker noise. Trilinear removes it but also loses the colored stripes. Anisotropic removes most of the noise while keeping the stripes.</p>
+<table><tr><td>Method</td><td>CPU time (ms)</td></tr><tr><td>Nearest</td><td>1.074</td></tr><tr><td>Bilinear</td><td>2.389</td></tr><tr><td>Trilinear</td><td>4.955</td></tr><tr><td>Anisotropic</td><td>28.938</td></tr></table>
+<p>These use the same timing setup as Task 1. Anisotropic is slower because it takes several texture samples per pixel. It needs no extra texture images beyond the mip chain. This is a simple line of taps, so it is still an approximation. The mip choice follows PBRT, linked below.</p>
+</section>
+<section id="page-7">
+<h2>Task 7</h2>
+<p>For the art scene, the robot is camping on another planet. The sky and planet use color triangles. Small polygons make the stars, mountains, tent, and fire. The ring is made from short pieces, drawn behind and in front of the planet.</p>
+<figure class="single"><a href="images/competition.png"><img src="images/competition.png" alt="competition.svg, 800 by 800, saved with S at 16 samples."></a><figcaption>competition.svg, 800 by 800, saved with S at 16 samples.</figcaption></figure>
+<p>The script src/generate_competition.py writes the SVG. Sine and cosine place the planet and ring vertices, and a fixed random seed places the stars. The robot uses nested groups for its waving arm. Everything is made from supported shapes, with no paths.</p>
+<p>Codex helped with the extra features, checks, scene generator, and writing.</p>
+</section>
+<footer><a href="https://commons.wikimedia.org/wiki/File:Zone_plate_boys.png">Texture source</a> | <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> | <a href="https://pbr-book.org/4ed/Textures_and_Materials/Image_Texture">PBRT filtering reference</a> | <a href="ASSET_CREDITS.md">Image credits</a> | <a href="capture-manifest.json">Screenshot settings</a> | <a href="images/zone_plate_boys.png">Original PNG</a></footer></body></html>
